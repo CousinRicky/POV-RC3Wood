@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RC3Wood 2.0 User Manual | POV-Ray Object Collection (Proposed)</title>
+<link rel="stylesheet" type="text/css" href="rc3wood.css">
+</head>
+
+<body>
+
+<h1>RC3Wood 2.0 User&nbsp;Manual</h1>
+
+<h2>Abstract</h2>
+
+<p>
+<a href="rc3wood.jpg" class="demo"><img src="rc3wood_thumbnail.jpg" title="Larger demo image" alt="[Thumbnail which links to a larger demo image]"></a>
+RC3Wood is a library module proposed for the
+<a href="https://www.povray.org/">Persistence of Vision Raytracer (POV-Ray)</a>
+<a href="http://lib.povray.org/">Object Collection</a>
+that defines macros that create various wood textures.
+
+<hr>
+
+<h2 id="toc">Table of Contents</h2>
+
+<ul>
+ <li><a href="#Overview">Overview</a>
+  <ul>
+   <li><a href="#Files">Downloaded files</a>
+   <li><a href="#Prereqs">Prerequisites</a>
+   <li><a href="#Compliance">Namespace compliance</a>
+   <li><a href="#Usage">Usage</a>
+  </ul>
+ <li><a href="#Macros">Macro</a>
+  <ul>
+   <li><a href="#args">Argument formats</a>
+   <li><a href="#RC3Wood_Solid_t">RC3Wood_Solid_t</a>
+  </ul>
+ <li><a href="#Other_identifiers">Other identifiers</a>
+ <li><a href="#About">About RC3Wood</a>
+</ul>
+
+<hr>
+
+<h2 id="Overview">Overview</h2>
+
+<h3 id="Files">Downloaded Files</h3>
+
+<table>
+ <tr>
+  <th colspan="2">Key Files</th>
+ </tr><tr>
+  <th>File</th>
+  <th>Description</th>
+ </tr><tr>
+  <td><code>rc3wood.html</code></td>
+  <td>The user manual (this document)</td>
+ </tr><tr>
+  <td><code>rc3wood.inc</code></td>
+  <td>The RC3Wood library</td>
+ </tr><tr>
+  <td><code>rc3wood.pov</code></td>
+  <td>A scene description file demonstrating the features of RC3Wood</td>
+ </tr><tr>
+  <td><code>rc3wood.jpg</code></td>
+  <td rowspan="2">Sample output images</td>
+ </tr><tr>
+  <td><code>rc3wood_thumbnail.jpg</code></td>
+ </tr><tr>
+  <th colspan="2">Administrative Files</th>
+ </tr><tr>
+  <th>File</th>
+  <th>Description</th>
+ </tr><tr>
+  <td><code>README</code><var>nnnnnn</var><code>.html</code></td>
+  <td>Important information about using the POV-Ray Object Collection</td>
+ </tr><tr>
+  <td><code>rc3wood_description.txt</code></td>
+  <td>A brief description of RC3Wood</td>
+ </tr><tr>
+  <td><code>rc3wood_keywords.txt</code></td>
+  <td>A list of keywords</td>
+ </tr><tr>
+  <td><code>rc3wood_prereqs.txt</code></td>
+  <td>Prerequisites (empty file)</td>
+ </tr><tr>
+  <td><code>rc3wood.css</code></td>
+  <td rowspan="3">Other administrative files</td>
+ </tr><tr>
+  <td><code>cc-LGPL-a.png</code></td>
+ </tr><tr>
+  <td><code>Version</code><var>nnnnnn</var><code>.js</code></td>
+ </tr>
+</table>
+
+<p>The italicized <var>nnnnnn</var> in some of the file names represents the 6-digit number that is in the name of the <code>.zip</code> file as downloaded from <a href="http://lib.povray.org/">lib.povray.org</a>. If you downloaded this module from some other repository, the files <code>cc-LGPL-a.png</code>, <code>README</code><var>nnnnnn</var><code>.html</code>, and <code>Version</code><var>nnnnnn</var><code>.js</code> may not be present. Please see the <a href="https://web.archive.org/web/20120419111948/http://lib.povray.org/usersguide/02using.html">Object Collection User’s Guide</a> if <code>README</code><var>nnnnnn</var><code>.html</code> is not present.
+
+<p><a href="#toc">Table of contents</a><hr>
+
+<h3 id="Prereqs">Prerequisites</h3>
+
+<p>RC3Wood requires POV-Ray version 3.5 or later.
+
+<h3 id="Compliance">Namespace Compliance</h3>
+
+<p>All file names in this module and all global and local identifiers defined in <code>rc3wood.inc</code> comply fully with the <a href="https://news.povray.org/470b46cb%241%40news.povray.org">Object Collection naming standards</a>, as <a href="https://news.povray.org/48ba92e8%241%40news.povray.org">revised August 2008</a> and <a href="https://news.povray.org/povray.object-collection/thread/%3Cweb.5018a69dae7e89cb85de7b680%40news.povray.org%3E/">proposed August 2012</a>. The files in this module may be safely stored in the same folder as other fully compliant Object Collection modules.
+
+<p>The reserved prefixes for this module are “<code>RC3Wood</code>” and “<code>RC3W</code>,” including any uppercase and lowercase variants. To avoid conflicts, do not introduce into your scene description file any identifiers with either of these prefixes as names, or any identifiers that start with either of these prefixes plus an underscore.
+
+<p>The standard include file <code>functions.inc</code> is used by <code>rc3wood.inc</code>. The identifier <code>View_POV_Include_Stack</code> from the standard include file <code>debug.inc</code> is referenced by <code>rc3wood.inc</code>, although <code>debug.inc</code> itself is not used.
+
+<h3 id="Usage">Usage</h3>
+
+<p>Include this file once prior to using any of the macros:
+<pre>#include "rc3wood.inc"</pre>
+<p>Including the file more than once is harmless, though unnecessary.
+
+<p><a href="#toc">Table of contents</a><hr>
+
+<h2 id="Macros">Macro</h2>
+
+<h3 id="args">Argument formats</h3>
+
+<h4>Taper</h4>
+
+<p>This specifies the amount of taper in the growth rings. It is directly analogous to grain slope: the larger its value, the closer to cylindrical the rings will be. As a special case, zero yields cylindrical rings.
+
+<p>At this time, the grain itself is not affected by this argument. It is intended that this will change in a future version.
+
+<h4>Rings_map</h4>
+
+<p>This is an array of 2-D (<var>uv</var>) vectors that determine the color map and slope map of the annual rings. The <code>.u</code> component is the position within the ring, with 0.0 at the inner edge, and 1.0 at the outer edge. These must be in numerical order, from lowest to highest. The <code>.v</code> component is the color at that position, with 0.0 representing the lightest color, and 1.0 representing the darkest color. In-between values are interpolated. Several <a href="#rings">built-in rings maps</a> are provided.
+
+<p><a href="#toc">Table of contents</a><hr>
+
+<h3 id="RC3Wood_Solid_t">RC3Wood_Solid_t (Taper, Rings_map, c_Light, c_Dark, Grain_size, Roughness, Gnarl, Stretch, v_Random)</h3>
+
+<p>Creates a wood texture. The grain is aligned with the <var>z</var>-axis and tapered in the <var>z</var> direction. The growth rings are spaced one POV unit apart.
+
+<h4>Arguments</h4>
+<table>
+ <tr><th>Formal Parameter</th> <th>Type</th> <th>Description</th></tr>
+ <tr>
+  <td><code>Taper</code></td>
+  <td>float</td>
+  <td>The amount of taper in the growth rings, or zero for cylindrical rings. (See <a href="#args">argument formats</a>.)</td>
+ </tr><tr>
+  <td><code>Rings_map</code></td>
+  <td>array of 2-D vectors</td>
+  <td>The form of the annual rings. (See <a href="#args">argument formats</a>.)</td>
+ </tr><tr>
+  <td><code>c_Light</code></td>
+  <td>color</td>
+  <td>The color of the lightest areas.</td>
+ </tr><tr>
+  <td><code>c_Dark</code></td>
+  <td>color</td>
+  <td>The color of the darkest areas.</td>
+ </tr><tr>
+  <td><code>Grain_size</code></td>
+  <td>float</td>
+  <td>The size of the wood grain; use a value much smaller than 1.0.</td>
+ </tr><tr>
+  <td><code>Roughness</code></td>
+  <td>float</td>
+  <td>The roughness of the wood.</td>
+ </tr><tr>
+  <td><code>Gnarl</code></td>
+  <td>float</td>
+  <td>The gnarliness of the wood.</td>
+ </tr><tr>
+  <td><code>Stretch</code></td>
+  <td>float</td>
+  <td>The stretching of the gnarliness along the grain.</td>
+ </tr><tr>
+  <td><code>v_Random</code></td>
+  <td>vector</td>
+  <td>An offset for the gnarliness; use this to avoid repeated wood textures on different objects.</td>
+ </tr>
+</table>
+
+<p><a href="#toc">Table of contents</a><hr>
+
+<h2 id="Other_identifiers">Other Identifiers</h2>
+
+<h3>Rings Maps</h3>
+
+<table id="rings">
+ <tr><th>Identifier</th> <th>Type</th> <th>Description</th></tr>
+ <tr>
+  <td><code>RC3W_Rings_Thick</code></td>
+  <td>array of 2-D vectors</td>
+  <td>A map for thick annual rings.</td>
+ </tr><tr>
+  <td><code>RC3W_Rings_Thin</code></td>
+  <td>array of 2-D vectors</td>
+  <td>A map for thin annual rings.</td>
+ </tr><tr>
+  <td><code>RC3W_Rings_V111</code></td>
+  <td>array of 2-D vectors</td>
+  <td>A map that approximates the annual rings that were hard-wired into RC3Wood version 1.1.1.</td>
+ </tr>
+</table>
+
+<h3>Varnish Interiors</h3>
+
+<p>For a proper varnish or lacquer, the finish should use Fresnel reflection, which requires an <code>interior</code> block with a refractive index (<code>ior</code>) greater than 1.
+
+<p>The values below are rough averages derived from sources which may or may not be reliable. Polyurethane in particular was so difficult to source that I just used the values presented up front by Google.
+
+<table>
+ <tr><th>Identifier</th> <th>Type</th> <th>Description</th> <th>ior</th></tr>
+ <tr>
+  <td><code>RC3W_i_Acrylic_Varnish</code></td>
+  <td>interior</td>
+  <td>An interior for acrylic varnish.</td>
+  <td>1.491</td>
+ </tr><tr>
+  <td><code>RC3W_i_Polyu_Varnish_High</code></td>
+  <td>interior</td>
+  <td>An interior for a polyurethane varnish with a high refractive index.</td>
+  <td>1.63</td>
+ </tr><tr>
+  <td><code>RC3W_i_Polyu_Varnish_Low</code></td>
+  <td>interior</td>
+  <td>An interior for a polyurethane varnish with a low refractive index.</td>
+  <td>1.53</td>
+ </tr><tr>
+  <td><code>RC3W_i_Shellac</code></td>
+  <td>interior</td>
+  <td>An interior for shellac.</td>
+  <td>1.525</td>
+ </tr>
+</table>
+
+<h3>Miscellaneous Reference Identifier</h3>
+
+<table>
+ <tr><th>Identifier</th> <th>Type</th> <th>Description</th> <th>Value</th></tr>
+ <tr>
+  <td><code>RC3WOOD_VERSION</code></td>
+  <td>float</td>
+  <td>The RC3Wood version, in case the scene file needs that information.</td>
+  <td>2.0</td>
+ </tr>
+</table>
+
+<h3>Internal Identifiers</h3>
+
+<p>Any identifiers in <code>rc3wood.inc</code> that are not documented in this manual are considered “private” and are subject to change or elimination in a future update.
+
+<p><a href="#toc">Table of contents</a><hr>
+
+<h2 id="About">About RC3Wood</h2>
+
+<address>
+ <p>Copyright © 20?? Richard Callwood III. Some rights reserved.
+ <p>This library is free software; you can redistribute it and/or modify it under the terms of the <a href="https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html" target="_blank">GNU Lesser General Public License version 2.1</a> as published by the Free Software Foundation.
+ <p>This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+</address>
+
+<h3 id="Categories">Object Collection Categories</h3>
+
+<ul>
+ <li><strong>Areas of Interest</strong>
+  <ul>
+   <li>Organic forms
+    <ul>
+     <li>Terrestrial flora
+    </ul>
+  </ul>
+ <li><strong>Contribution Types</strong>
+  <ul>
+   <li>Textures
+    <ul>
+     <li>Pigments
+     <li>Normals
+    </ul>
+   <li>Macros
+  </ul>
+</ul>
+
+<h3 id="Changes">Unpublished Versions</h3>
+
+<table>
+ <tr><th>Version</th> <th>Date</th> <th>Notes</th></tr>
+ <tr>
+  <td>1.0</td>
+  <td>2006 December 10</td>
+  <td>The library is created as rc3_wood.inc.</td>
+ </tr><tr>
+  <td>1.1</td>
+  <td>2006 December 17</td>
+  <td>The library is given its present name.</td>
+ </tr><tr>
+  <td>1.1.1</td>
+  <td>2008 March 19</td>
+  <td>A macro with a roughness argument is added.</td>
+ </tr><tr>
+  <td>1.1.1-20090421</td>
+  <td>2009 April 21</td>
+  <td>The last update (of unrecorded nature) is made prior to Object Collection conversion.</td>
+ </tr>
+</table>
+
+<h3>Change Log</h3>
+
+<table>
+ <tr><th>Version</th> <th>Date</th> <th>Notes</th></tr>
+ <tr>
+  <td>1.1.1-20090421A</td>
+  <td>2023 May 7</td>
+  <td>The library is cleaned up for public release and uploaded to GitHub.</td>
+ </tr><tr>
+  <td>2.0</td>
+  <td>20?? ??? ??</td>
+  <td>The library is rewritten for future inclusion in the Object Collection:
+   <ul>
+    <li>The library is made namespace compliant.
+    <li>The macros are completely replaced.
+    <li>The growth rings are tapered, rather than cylindrical. At this time, the grain itself remains parallel.
+    <li>Cross-grain banding is temporarily discontinued.
+    <li>The generic varnish interior is replaced with interiors for several specific materials.
+    <li>The new macro does not apply varnish. Varnished examples are retained in the demo scene.
+   </ul>
+  </td>
+ </tr>
+</table>
+
+<h3>Possible Future Development</h3>
+
+<ul>
+ <li>Tapered grain
+ <li>Cross-grain banding from machining
+ <li>Figure patterns
+ <li>Plywood
+ <li>Knots
+</ul>
+
+<h3>Other Wood Models</h3>
+
+<ul>
+ <li><a href="http://www.imagico.de/iso_wood_en.php" target="_blank">IsoWood: an isosurface wood object, by Christoph Hormann</a>
+ <li><a href="https://news.povray.org/5ad572d0%40news.povray.org" target="_blank"><code>SL - Woods.inc</code>: a wood texture playground, by Sven Littkowski</a>
+ <li><a href="http://warp.povusers.org/povtips/" target="_blank">Warp’s tip #1: textured floor, by Juha Nieminen</a>
+ <li><a href="https://news.povray.org/povray.binaries.utilities/thread/%3Cweb.62b9d31097c0f8e9cf20f667aa81652d%40news.povray.org%3E/" target="_blank">Wood design program, by And</a>; check <a href="https://news.povray.org/povray.binaries.utilities/" target="_blank">povray.binaries.utilities</a> for updates.
+ <li><a href="https://news.povray.org/povray.binaries.images/thread/%3C469b46bf%40news.povray.org%3E/" target="_blank">Wood veneer pattern, by David El Tom</a>
+ <li>Two <a href="https://news.povray.org/5d20406d%40news.povray.org" target="_blank">wooden parket floors, by Dan B. Hentschel and Thomas de Groot</a>
+</ul>
+
+<p><a href="#toc">Table of contents</a>
+
+</body>
+</html>
