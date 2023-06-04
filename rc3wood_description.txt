@@ -1,1 +1,1 @@
-Wood texture macros.
+Procedural wood texture macros.

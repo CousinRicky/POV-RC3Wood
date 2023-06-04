@@ -17,7 +17,7 @@
 RC3Wood is a library module proposed for the
 <a href="https://www.povray.org/">Persistence of Vision Raytracer (POV-Ray)</a>
 <a href="http://lib.povray.org/">Object Collection</a>
-that defines macros that create various wood textures.
+that defines macros that create procedural wood textures.
 
 <hr>
 
@@ -31,10 +31,16 @@ that defines macros that create various wood textures.
    <li><a href="#Compliance">Namespace compliance</a>
    <li><a href="#Usage">Usage</a>
   </ul>
- <li><a href="#Macros">Macro</a>
+ <li><a href="#Macros">Macros</a>
   <ul>
-   <li><a href="#args">Argument formats</a>
+   <li><a href="#implementation">Implementation note</a>
+   <li><a href="#finish">Finish settings</a>
+   <li><a href="#args">Macro arguments</a>
+   <li><a href="#RC3Wood_Gloss_f">RC3Wood_Gloss_f</a>
+   <li><a href="#RC3Wood_Normal">RC3Wood_Normal</a>
    <li><a href="#RC3Wood_Solid_t">RC3Wood_Solid_t</a>
+   <li><a href="#RC3Wood_Varnished_m">RC3Wood_Varnished_m</a>
+   <li><a href="#RC3Wood_Varnished_t">RC3Wood_Varnished_t</a>
   </ul>
  <li><a href="#Other_identifiers">Other identifiers</a>
  <li><a href="#About">About RC3Wood</a>
@@ -60,7 +66,7 @@ that defines macros that create various wood textures.
   <td>The RC3Wood library</td>
  </tr><tr>
   <td><code>rc3wood.pov</code></td>
-  <td>A scene description file demonstrating the features of RC3Wood</td>
+  <td>A scene description file demonstrating features of RC3Wood</td>
  </tr><tr>
   <td><code>rc3wood.jpg</code></td>
   <td rowspan="2">Sample output images</td>
@@ -117,67 +123,118 @@ that defines macros that create various wood textures.
 
 <p><a href="#toc">Table of contents</a><hr>
 
-<h2 id="Macros">Macro</h2>
+<h2 id="Macros">Macros</h2>
 
-<h3 id="args">Argument formats</h3>
+<h3 id="implementation">Implementation Note</h3>
 
-<h4>Taper</h4>
+<p>For the reason explained in the file <code>rc3wood.inc</code>, the macros return blocks, i.e., <code>texture { ... }</code>, <code>normal { ... }</code>, etc. Therefore, in order to manipulate the textures, you may need to assign them to variables. For example:
 
-<p>This specifies the amount of taper in the growth rings. It is directly analogous to grain slope: the larger its value, the closer to cylindrical the rings will be. As a special case, zero yields cylindrical rings.
-
-<p>At this time, the grain itself is not affected by this argument. It is intended that this will change in a future version.
-
-<h4>Rings_map</h4>
-
-<p>This is an array of 2-D (<var>uv</var>) vectors that determine the color map and slope map of the annual rings. The <code>.u</code> component is the position within the ring, with 0.0 at the inner edge, and 1.0 at the outer edge. These must be in numerical order, from lowest to highest. The <code>.v</code> component is the color at that position, with 0.0 representing the lightest color, and 1.0 representing the darkest color. In-between values are interpolated. Several <a href="#rings">built-in rings maps</a> are provided.
+<pre>#declare T = RC3Wood_Solid_t (...)
+texture { T scale 0.1 }</pre>
 
 <p><a href="#toc">Table of contents</a><hr>
 
-<h3 id="RC3Wood_Solid_t">RC3Wood_Solid_t (Taper, Rings_map, c_Light, c_Dark, Grain_size, Roughness, Gnarl, Stretch, v_Random)</h3>
+<h3 id="finish">Finish Settings</h3>
 
-<p>Creates a wood texture. The grain is aligned with the <var>z</var>-axis and tapered in the <var>z</var> direction. The growth rings are spaced one POV unit apart.
+<p>The macros do not set <code>ambient</code> or <code>diffuse</code>. The textures they create will therefore use the POV-Ray defaults, or inherit these properties from a <code>#default</code> statement.
 
-<h4>Arguments</h4>
+<p><a href="#toc">Table of contents</a><hr>
+
+<h3 id="args">Macro Arguments</h3>
+
+<p>Many of the macros have the same arguments. These arguments are explained here.
+
 <table>
  <tr><th>Formal Parameter</th> <th>Type</th> <th>Description</th></tr>
  <tr>
-  <td><code>Taper</code></td>
-  <td>float</td>
-  <td>The amount of taper in the growth rings, or zero for cylindrical rings. (See <a href="#args">argument formats</a>.)</td>
- </tr><tr>
-  <td><code>Rings_map</code></td>
-  <td>array of 2-D vectors</td>
-  <td>The form of the annual rings. (See <a href="#args">argument formats</a>.)</td>
- </tr><tr>
-  <td><code>c_Light</code></td>
-  <td>color</td>
-  <td>The color of the lightest areas.</td>
- </tr><tr>
   <td><code>c_Dark</code></td>
   <td>color</td>
-  <td>The color of the darkest areas.</td>
+  <td><p>The color of the darkest areas of the wood.</td>
  </tr><tr>
-  <td><code>Grain_size</code></td>
+  <td><code>Glossiness</code></td>
   <td>float</td>
-  <td>The size of the wood grain; use a value much smaller than 1.0.</td>
- </tr><tr>
-  <td><code>Roughness</code></td>
-  <td>float</td>
-  <td>The roughness of the wood.</td>
+  <td><p>The amount of glossiness: 0.0 for no gloss; 1.0 for a glassy finish.</td>
  </tr><tr>
   <td><code>Gnarl</code></td>
   <td>float</td>
-  <td>The gnarliness of the wood.</td>
+  <td><p>The gnarliness of the wood.</td>
  </tr><tr>
-  <td><code>Stretch</code></td>
+  <td><code>Gnarl_size</code></td>
+  <td>vector</td>
+  <td><p>The overall scale of the gnarliness.</td>
+ </tr><tr>
+  <td><code>Grain_size</code></td>
   <td>float</td>
-  <td>The stretching of the gnarliness along the grain.</td>
+  <td><p>The size of the wood grain, compared to the width of a growth ring; use a value much smaller than 1.0.</td>
+ </tr><tr>
+  <td><code>IoR</code></td>
+  <td>float</td>
+  <td><p>The refractive index of the varnish or lacquer. This value should be greater than 1.0. <a href="#varnishes">Refractive indices of several finishes</a> are provided.</td>
+ </tr><tr>
+  <td><code>c_Light</code></td>
+  <td>color</td>
+  <td><p>The color of the lightest areas of the wood.</td>
  </tr><tr>
   <td><code>v_Random</code></td>
   <td>vector</td>
-  <td>An offset for the gnarliness; use this to avoid repeated wood textures on different objects.</td>
+  <td><p>An offset for the gnarliness; use this to avoid repeated wood textures on different objects.</td>
+ </tr><tr>
+  <td><code>Rings_map</code></td>
+  <td>array of 2-D vectors</td>
+  <td>
+   <p>This array of 2-D (<var>uv</var>) vectors determines the color map and normal slope map of the annual rings. The <code>.u</code> component is the position within the ring, with 0.0 at the inner edge, and 1.0 at the outer edge. These must be in numerical order, from lowest to highest. The <code>.v</code> component is the color at that position, with 0.0 representing the lightest color, and 1.0 representing the darkest color. In-between values are interpolated. Several <a href="#rings">built-in rings maps</a> are provided.
+  </td>
+ </tr><tr>
+  <td><code>Roughness</code></td>
+  <td>float</td>
+  <td><p>The roughness of the wood.</td>
+ </tr><tr>
+  <td><code>Softness</code></td>
+  <td>float</td>
+  <td><p>The softness of the highlights. 0.05 yields a broad highlight, and smaller values yield sharper highlights. Use zero to suppress highlights altogether</td>
+ </tr><tr>
+  <td><code>Taper</code></td>
+  <td>float</td>
+  <td>
+   <p>The amount of taper in the growth rings. It is directly analogous to grain slope: the larger its value, the closer to cylindrical the rings will be. As a special case, zero yields cylindrical rings.
+   <p>At this time, the grain itself is not affected by this argument. It is intended that this will change in a future version.
+  </td>
  </tr>
 </table>
+
+<p><a href="#toc">Table of contents</a><hr>
+
+<h3 id="RC3Wood_Gloss_f">RC3Wood_Gloss_f (Glossiness, Softness, IoR)</h3>
+
+<p>Creates a glossy finish. This macro uses Fresnel reflection; thus, for it to have any effect, objects must also have an <code>interior</code> block with a refractive index (<code>ior</code>) greater than 1.
+
+<p><a href="#toc">Table of contents</a><hr>
+
+<h3 id="RC3Wood_Normal">RC3Wood_Normal (Taper, Rings_map, Grain_size, Roughness, Gnarl, Gnarl_size, v_Random)</h3>
+
+<p>Creates a normal for solid wood. The grain is aligned with the <var>z</var>-axis and the growth rings are tapered in the <var>z</var> direction. The growth rings are spaced one POV unit apart.
+
+<p><a href="#toc">Table of contents</a><hr>
+
+<h3 id="RC3Wood_Solid_t">RC3Wood_Solid_t (Taper, Rings_map, c_Light, c_Dark, Grain_size, Roughness, Gnarl, Gnarl_size, v_Random)</h3>
+
+<p>Creates a wood texture for solid wood. The grain is aligned with the <var>z</var>-axis and the growth rings are tapered in the <var>z</var> direction. The growth rings are spaced one POV unit apart.
+
+<p><a href="#toc">Table of contents</a><hr>
+
+<h3 id="RC3Wood_Varnished_m">RC3Wood_Varnished_m (Taper, Rings_map, c_Light, c_Dark, Grain_size, Roughness, Gnarl, Gnarl_size, v_Random, Glossiness, Softness, IoR)</h3>
+
+<p>Creates a varnished wood material for solid wood, for which the grain shows through the varnish. The grain is aligned with the <var>z</var>-axis and the growth rings are tapered in the <var>z</var> direction. The growth rings are spaced one POV unit apart.
+
+<p>The returned material contains the necessary interior for Fresnel reflection. No additional <code>interior</code> block is necessary.
+
+<p><a href="#toc">Table of contents</a><hr>
+
+<h3 id="RC3Wood_Varnished_t">RC3Wood_Varnished_t (Taper, Rings_map, c_Light, c_Dark, Grain_size, Roughness, Gnarl, Gnarl_size, v_Random, Glossiness, Softness, IoR)</h3>
+
+<p>Creates a varnished wood texture for solid wood, for which the grain shows through the varnish. The grain is aligned with the <var>z</var>-axis and the growth rings are tapered in the <var>z</var> direction. The growth rings are spaced one POV unit apart.
+
+<p>This macro uses Fresnel reflection; thus, for it to have any effect, objects must also have an <code>interior</code> block with a refractive index (<code>ior</code>) greater than 1.
 
 <p><a href="#toc">Table of contents</a><hr>
 
@@ -188,13 +245,33 @@ that defines macros that create various wood textures.
 <table id="rings">
  <tr><th>Identifier</th> <th>Type</th> <th>Description</th></tr>
  <tr>
-  <td><code>RC3W_Rings_Thick</code></td>
+  <td><code>RC3W_Rings_Heavy</code></td>
   <td>array of 2-D vectors</td>
-  <td>A map for thick annual rings.</td>
+  <td>A map for dark annual rings.</td>
  </tr><tr>
-  <td><code>RC3W_Rings_Thin</code></td>
+  <td><code>RC3W_Rings_Light</code></td>
   <td>array of 2-D vectors</td>
-  <td>A map for thin annual rings.</td>
+  <td>A map for light annual rings.</td>
+ </tr><tr>
+  <td><code>RC3W_Rings_Light2</code></td>
+  <td>array of 2-D vectors</td>
+  <td>A map for light annual rings and uneven growth seasons.</td>
+ </tr><tr>
+  <td><code>RC3W_Rings_Medium</code></td>
+  <td>array of 2-D vectors</td>
+  <td>A map for moderately heavy annual rings.</td>
+ </tr><tr>
+  <td><code>RC3W_Rings_Medium2</code></td>
+  <td>array of 2-D vectors</td>
+  <td>A map for moderately heavy annual rings and uneven growth seasons.</td>
+ </tr><tr>
+  <td><code>RC3W_Rings_Ramp</code></td>
+  <td>array of 2-D vectors</td>
+  <td>A simple ramp wave map, similar to the <code>wood</code> pattern with <code>ramp_wave</code>.</td>
+ </tr><tr>
+  <td><code>RC3W_Rings_Triangle</code></td>
+  <td>array of 2-D vectors</td>
+  <td>A simple triangle wave map, similar to the <code>wood</code> pattern.</td>
  </tr><tr>
   <td><code>RC3W_Rings_V111</code></td>
   <td>array of 2-D vectors</td>
@@ -202,18 +279,38 @@ that defines macros that create various wood textures.
  </tr>
 </table>
 
-<h3>Varnish Interiors</h3>
+<h3 id="varnishes">Varnishes</h3>
 
-<p>For a proper varnish or lacquer, the finish should use Fresnel reflection, which requires an <code>interior</code> block with a refractive index (<code>ior</code>) greater than 1.
+<p>For a realistic varnish or lacquer, the finish should use Fresnel reflection. In order for this type of reflection to have any effect, the object must have an <code>interior</code> block with a refractive index (<code>ior</code>) greater than 1.0. This section contains interiors and refractive indices that can be used in such an <code>interior</code> block.
 
 <p>The values below are rough averages derived from sources which may or may not be reliable. Polyurethane in particular was so difficult to source that I just used the values presented up front by Google.
 
 <table>
- <tr><th>Identifier</th> <th>Type</th> <th>Description</th> <th>ior</th></tr>
+ <tr><th>Identifier</th> <th>Type</th> <th>Description</th> <th>Value/<code>ior</code></th></tr>
  <tr>
+  <td><code>RC3W_nACRYLIC_VARNISH</code></td>
+  <td>float</td>
+  <td>An acrylic varnish refractive index.</td>
+  <td>1.491</td>
+ </tr><tr>
+  <td><code>RC3W_nPOLYU_VARNISH_HIGH</code></td>
+  <td>float</td>
+  <td>A high refractive index for a polyurethane varnish.</td>
+  <td>1.63</td>
+ </tr><tr>
+  <td><code>RC3W_nPOLYU_VARNISH_LOW</code></td>
+  <td>float</td>
+  <td>A low refractive index for a polyurethane varnish.</td>
+  <td>1.53</td>
+ </tr><tr>
+  <td><code>RC3W_nSHELLAC</code></td>
+  <td>float</td>
+  <td>A shellac refractive index.</td>
+  <td>1.525</td>
+ </tr><tr>
   <td><code>RC3W_i_Acrylic_Varnish</code></td>
   <td>interior</td>
-  <td>An interior for acrylic varnish.</td>
+  <td>An interior for acrylic varnish, also useful for glossy paint.</td>
   <td>1.491</td>
  </tr><tr>
   <td><code>RC3W_i_Polyu_Varnish_High</code></td>
@@ -254,7 +351,7 @@ that defines macros that create various wood textures.
 <h2 id="About">About RC3Wood</h2>
 
 <address>
- <p>Copyright © 20?? Richard Callwood III. Some rights reserved.
+ <p>Copyright © 2023 Richard Callwood III. Some rights reserved.
  <p>This library is free software; you can redistribute it and/or modify it under the terms of the <a href="https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html" target="_blank">GNU Lesser General Public License version 2.1</a> as published by the Free Software Foundation.
  <p>This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 </address>
@@ -271,23 +368,28 @@ that defines macros that create various wood textures.
   </ul>
  <li><strong>Contribution Types</strong>
   <ul>
+   <li>Materials
    <li>Textures
     <ul>
      <li>Pigments
+     <li>Finishes
      <li>Normals
     </ul>
+   <li>Interiors
    <li>Macros
   </ul>
 </ul>
 
 <h3 id="Changes">Unpublished Versions</h3>
 
+<p>This section is just a paper trail, as the backups for all versions prior to 2009 April 21 are long overwritten.
+
 <table>
  <tr><th>Version</th> <th>Date</th> <th>Notes</th></tr>
  <tr>
   <td>1.0</td>
   <td>2006 December 10</td>
-  <td>The library is created as rc3_wood.inc.</td>
+  <td>The library is created as <code>rc3_wood.inc</code>.</td>
  </tr><tr>
   <td>1.1</td>
   <td>2006 December 17</td>
@@ -313,15 +415,14 @@ that defines macros that create various wood textures.
   <td>The library is cleaned up for public release and uploaded to GitHub.</td>
  </tr><tr>
   <td>2.0</td>
-  <td>20?? ??? ??</td>
-  <td>The library is rewritten for future inclusion in the Object Collection:
+  <td>2023 June 4</td>
+  <td>The library is completely rewritten:
    <ul>
-    <li>The library is made namespace compliant.
+    <li>The library is made namespace compliant, with the intent of future submission to the Object Collection.
     <li>The macros are completely replaced.
     <li>The growth rings are tapered, rather than cylindrical. At this time, the grain itself remains parallel.
     <li>Cross-grain banding is temporarily discontinued.
     <li>The generic varnish interior is replaced with interiors for several specific materials.
-    <li>The new macro does not apply varnish. Varnished examples are retained in the demo scene.
    </ul>
   </td>
  </tr>
@@ -340,12 +441,12 @@ that defines macros that create various wood textures.
 <h3>Other Wood Models</h3>
 
 <ul>
- <li><a href="http://www.imagico.de/iso_wood_en.php" target="_blank">IsoWood: an isosurface wood object, by Christoph Hormann</a>
+ <li><a href="https://www.imagico.de/iso_wood_en.php" target="_blank">IsoWood: an isosurface wood object, by Christoph Hormann</a>
  <li><a href="https://news.povray.org/5ad572d0%40news.povray.org" target="_blank"><code>SL - Woods.inc</code>: a wood texture playground, by Sven Littkowski</a>
  <li><a href="http://warp.povusers.org/povtips/" target="_blank">Warp’s tip #1: textured floor, by Juha Nieminen</a>
  <li><a href="https://news.povray.org/povray.binaries.utilities/thread/%3Cweb.62b9d31097c0f8e9cf20f667aa81652d%40news.povray.org%3E/" target="_blank">Wood design program, by And</a>; check <a href="https://news.povray.org/povray.binaries.utilities/" target="_blank">povray.binaries.utilities</a> for updates.
  <li><a href="https://news.povray.org/povray.binaries.images/thread/%3C469b46bf%40news.povray.org%3E/" target="_blank">Wood veneer pattern, by David El Tom</a>
- <li>Two <a href="https://news.povray.org/5d20406d%40news.povray.org" target="_blank">wooden parket floors, by Dan B. Hentschel and Thomas de Groot</a>
+ <li>Two <a href="https://news.povray.org/5d20406d%40news.povray.org" target="_blank">wooden parquet floors, by Dan B. Hentschel and Thomas de Groot</a>
 </ul>
 
 <p><a href="#toc">Table of contents</a>

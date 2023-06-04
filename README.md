@@ -1,7 +1,7 @@
 # RC3Wood
 
-Wood textures.
+![Thumbnail](rc3wood_thumbnail.jpg)
+
+Procedural wood textures.
 
 This project is a proposed module for the Persistence of Vision Raytracer (POV-Ray) Object Collection.
-
-This version is pre-release; some features are not yet implemented.
